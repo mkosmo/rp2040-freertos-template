@@ -1,7 +1,10 @@
-#include "FreeRTOS.h"
-#include "task.h"
-#include "semphr.h"
+//  SPDX-FileCopyrightText: 2023 Matthew Kosmoski <mkosmo@gmail.com>
+//  SPDX-License-Identifier: MIT
+
 #include <stdio.h>
+#include "FreeRTOS.h"
+#include "task.h"               // NOLINT
+#include "semphr.h"             // NOLINT
 #include "pico/stdlib.h"
 
 SemaphoreHandle_t serialMutex = NULL;
@@ -17,7 +20,7 @@ void vTaskSMP_print_core(void *p) {
     char out[12];
 
     for (;;) {
-        sprintf(out, "%s %d", task_name, get_core_num());
+        snprintf(out, "%s %d", task_name, get_core_num());
         vGuardedPrint(out);
         vTaskDelay(100);
     }
@@ -25,8 +28,7 @@ void vTaskSMP_print_core(void *p) {
     vTaskDelete(NULL);
 }
 
-void led_task(void *p)
-{
+void led_task(void *p) {
     const uint LED_PIN = PICO_DEFAULT_LED_PIN;
     gpio_init(LED_PIN);
     gpio_set_dir(LED_PIN, GPIO_OUT);
@@ -40,8 +42,7 @@ void led_task(void *p)
     vTaskDelete(NULL);
 }
 
-int main()
-{
+int main() {
     stdio_init_all();
 
     serialMutex = xSemaphoreCreateMutex();
@@ -58,5 +59,5 @@ int main()
 
     vTaskStartScheduler();
 
-    while(1){};
+    while (1) {}
 }
