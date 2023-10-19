@@ -21,16 +21,16 @@ jobs:
   lint-cpplint:
     runs-on: ubuntu-latest
     steps:
-    - name: ⤵️ Check out code from GitHub
-      uses: actions/checkout@v4
-      with:
-        submodules: false
-    - name: Setup Python
-      uses: actions/setup-python@v4
-    - name: Install cpplint
-      run: pip install cpplint
-    - name: Run cpplint
-      run: cpplint --exclude lib --recursive .
+      - name: ⤵️ Check out code from GitHub
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+      - name: Setup Python
+        uses: actions/setup-python@v4
+      - name: Install cpplint
+        run: pip install cpplint
+      - name: Run cpplint
+        run: cpplint --exclude lib --recursive .
 
   lint-yamllint:
     name: YAMLLint
@@ -50,7 +50,7 @@ jobs:
       - name: ⤵️ Check out code from GitHub
         uses: actions/checkout@v4
       - uses: actions/setup-python@v3
-      - uses: pre-commit/action@v3
+      - uses: pre-commit/action@v3.0.0
       - name: 🚀 Run Prettier
         uses: creyD/prettier_action@v4.3
         with:
