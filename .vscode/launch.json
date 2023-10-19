@@ -1,26 +1,19 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {   "name": "Pico Debug",
-            "device": "RP2040",
-            "cwd": "${workspaceRoot}",
-            "executable": "${workspaceRoot}/build/src/rp2040-freertos-template.elf",
-            "request": "launch",
-            "type": "cortex-debug",
-            "servertype": "openocd",
-            "configFiles": [
-                "interface/cmsis-dap.cfg",
-                "target/rp2040.cfg"
-            ],
-            "openOCDLaunchCommands": [
-                "adapter speed 5000"
-            ],
-            "svdFile": "${env:PICO_SDK_PATH}/src/rp2040/hardware_regs/rp2040.svd",
-            "postRestartCommands": [
-                "break main",
-                "continue"
-            ],
-            "showDevDebugOutput": "raw"
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Pico Debug",
+      "device": "RP2040",
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceRoot}/build/src/rp2040-freertos-template.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      "configFiles": ["interface/cmsis-dap.cfg", "target/rp2040.cfg"],
+      "openOCDLaunchCommands": ["adapter speed 5000"],
+      "svdFile": "${env:PICO_SDK_PATH}/src/rp2040/hardware_regs/rp2040.svd",
+      "postRestartCommands": ["break main", "continue"],
+      "showDevDebugOutput": "raw"
+    }
+  ]
 }
