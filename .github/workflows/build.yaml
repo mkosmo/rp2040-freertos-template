@@ -1,0 +1,55 @@
+---
+name: Build
+
+# yamllint disable-line rule:truthy
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: [ubuntu-latest]
+
+    steps:
+      - name: 🔬 Set BUILD_TYPE
+        run: |
+          if [[ $GITHUB_REF == refs/heads/master ]]; then
+            echo "BUILD_TYPE=Release" >> $GITHUB_ENV
+          else
+          echo "export BUILD_TYPE=Debug" >> $GITHUB_ENV
+          fi
+      - name: ⤵️ Check out code from GitHub
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: 🛠️ Create Build Environment
+        run: cmake -E make_directory ${{github.workspace}}/build
+
+      - name: 🛠️ Install Compiler
+        uses: carlosperate/arm-none-eabi-gcc-action@v1
+        with:
+          release: 10.3-2021.07
+
+      - name: 🛠️ Configure CMake
+        working-directory: ${{github.workspace}}/build
+        # yamllint disable-line rule:line-length
+        run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPICO_SDK_TESTS_ENABLED=1
+
+      - name: 🛠️ Build
+        working-directory: ${{github.workspace}}/build
+        # run: cmake --build . --config $BUILD_TYPE --parallel $(nproc)
+        run: cmake --build . --config Debug --parallel $(nproc)
+
+      - name: 📸 Upload Artifacts
+        uses: actions/upload-artifact@v3
+        if: ${{ !env.ACT }}
+        with:
+          name: build
+          path: |
+            ${{github.workspace}}/build/src/*.bin
+            ${{github.workspace}}/build/src/*.dis
+            ${{github.workspace}}/build/src/*.elf
+            ${{github.workspace}}/build/src/*.map
+            ${{github.workspace}}/build/src/*.hex
+            ${{github.workspace}}/build/src/*.uf2

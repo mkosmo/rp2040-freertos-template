@@ -1,0 +1,60 @@
+---
+name: Lint
+
+# yamllint disable-line rule:truthy
+on:
+  push:
+  workflow_call:
+
+jobs:
+  # json:
+  #   name: JSON Lint
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: ⤵️ Check out code from GitHub
+  #       uses: actions/checkout@v4
+  #     - name: 🚀 Run JQ
+  #       run: |
+  #         shopt -s globstar
+  #         cat **/*.json | jq '.'
+
+  lint-cpplint:
+    runs-on: ubuntu-latest
+    steps:
+    - name: ⤵️ Check out code from GitHub
+      uses: actions/checkout@v4
+      with:
+        submodules: false
+    - name: Setup Python
+      uses: actions/setup-python@v4
+    - name: Install cpplint
+      run: pip install cpplint
+    - name: Run cpplint
+      run: cpplint --exclude lib --recursive .
+
+  lint-yamllint:
+    name: YAMLLint
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⤵️ Check out code from GitHub
+        uses: actions/checkout@v4
+      - name: 🚀 Run YAMLLint
+        uses: frenck/action-yamllint@v1.4
+        with:
+          path: .github
+
+  lint-prettier:
+    name: Prettier
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⤵️ Check out code from GitHub
+        uses: actions/checkout@v4
+      - uses: actions/setup-python@v3
+      - uses: pre-commit/action@v3
+      - name: 🚀 Run Prettier
+        uses: creyD/prettier_action@v4.3
+        with:
+          prettier_options: --write **/*.{json,js,md,yaml}
+          commit_message: "chore: Prettified Code!"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
