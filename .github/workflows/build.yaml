@@ -44,7 +44,7 @@ jobs:
         run: cmake --build . --config Debug --parallel $(nproc)
 
       - name: 📸 Upload Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: ${{ !env.ACT }}
         with:
           name: build
